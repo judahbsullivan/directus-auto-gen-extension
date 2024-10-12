@@ -8,7 +8,7 @@ A [Directus](https://github.com/directus/directus) extension for automatically c
 - **Calculation is performed on the client side**, so it would not work if the item is created/updated via direct API calls or hooks.
 - **Lightweight**. No third-party libraries.
 
-![image](https://github.com/user-attachments/assets/3b0f7e53-a677-4343-9a49-089ecae707d3)
+![Screenshot 2024-10-11 153657](https://github.com/user-attachments/assets/953a4b32-3eda-4122-8ecf-4e73e04ebe71)
 
 
 # Installation
