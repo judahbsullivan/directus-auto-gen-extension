@@ -1,4 +1,4 @@
-[![npm version](https://badge.fury.io/js/directus-extension-computed-interface.svg)](https://badge.fury.io/js/directus-extension-computed-interface)
+[![npm version](https://badge.fury.io/js/directus-auto-gen-extension.svg)](https://badge.fury.io/js/directus-extension-auto-gen-extension)
 
 # Introduction
 A [Directus](https://github.com/directus/directus) extension for automatically calculating the value of a field based on other fields of the same item, on the client side.
@@ -12,7 +12,9 @@ A [Directus](https://github.com/directus/directus) extension for automatically c
 
 
 # Installation
-### WILL UPDATE SOON
+`npm i directus-auto-gen-extension`
+then move the file into the extensions or download it in the marketplace!
+
 # Get Started
 1. Go to **Settings**, create a new field with type string or number.
 2. In the **Interface** panel, choose **Computed** interface. There are 8 options:
