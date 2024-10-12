@@ -17,7 +17,7 @@ then move the file into the extensions or download it in the marketplace!
 
 # Get Started
 1. Go to **Settings**, create a new field with type string or number.
-2. In the **Interface** panel, choose **Computed** interface. There are 8 options:
+2. In the **Interface** panel, choose **Auto Gen** interface. There are 8 options:
     1. **Template**: Similar to M2M interface, determine how the field is calculated. Learn more about syntax in the next section.
     2. **Field Mode**: Choose how the value is displayed.
         - **null**: Default option. Show an input with the computed value but still allow manual editing.
