@@ -12,7 +12,13 @@ A [Directus](https://github.com/directus/directus) extension for automatically c
 
 
 # Installation
-### WILL UPDATE SOON
+1. Clone the repository or install the package via npm:
+    ```bash
+    npm install directus-auto-gen-extension
+    ```
+2. Add the extension to your Directus instance by moving the files to the `/extensions/` folder of your Directus project.
+3. Restart Directus to load the extension.
+
 # Get Started
 1. Go to **Settings**, create a new field with type string or number.
 2. In the **Interface** panel, choose **Computed** interface. There are 8 options:
