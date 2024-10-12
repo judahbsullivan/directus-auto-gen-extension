@@ -12,7 +12,9 @@ A [Directus](https://github.com/directus/directus) extension for automatically c
 
 
 # Installation
-### WILL UPDATE SOON
+`npm i directus-auto-gen-extension`
+then move the file into the extensions or download it in the marketplace!
+
 # Get Started
 1. Go to **Settings**, create a new field with type string or number.
 2. In the **Interface** panel, choose **Computed** interface. There are 8 options:
