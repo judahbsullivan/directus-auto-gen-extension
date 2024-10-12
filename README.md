@@ -1,4 +1,4 @@
-[![npm version](https://badge.fury.io/js/directus-extension-computed-interface.svg)](https://badge.fury.io/js/directus-extension-computed-interface)
+[![npm version](https://badge.fury.io/js/directus-auto-gen-extension.svg)](https://badge.fury.io/js/directus-extension-auto-gen-extension)
 
 # Introduction
 A [Directus](https://github.com/directus/directus) extension for automatically calculating the value of a field based on other fields of the same item, on the client side.
