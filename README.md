@@ -9,6 +9,7 @@ A [Directus](https://github.com/directus/directus) extension for automatically c
 - **Can be used as an alias field**.
 - **Calculation is performed on the client side**, so it would not work if the item is created/updated via direct API calls or hooks.
 - **Lightweight**. No third-party libraries.
+- CMS Theme Supporting, out of the box is adjusted to match the theme of the current CMS settings but can be overrided with customcss option. 
 
 ![Screenshot 2024-10-11 153657](https://github.com/user-attachments/assets/953a4b32-3eda-4122-8ecf-4e73e04ebe71)
 
