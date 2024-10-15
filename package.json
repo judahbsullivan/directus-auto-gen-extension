@@ -22,6 +22,9 @@
         "host": "^10.3.3",
         "type": "interface"
     },
+  "files": [
+  "dist"
+],
     "scripts": {
         "build": "directus-extension build",
         "dev": "directus-extension build -w --no-minify",
