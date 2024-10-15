@@ -1,6 +1,6 @@
 {
     "name": "directus-auto-gen-extension",
-    "version": "1.1.4",
+    "version": "1.1.5",
     "description": "Perform computed value based on other fields",
     "author": {
         "email": "jsullivan@hopemediagoup.com",
@@ -22,9 +22,9 @@
         "host": "^10.3.3",
         "type": "interface"
     },
-  "files": [
-  "dist"
-],
+    "files": [
+        "dist"
+    ],
     "scripts": {
         "build": "directus-extension build",
         "dev": "directus-extension build -w --no-minify",
