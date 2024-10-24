@@ -542,9 +542,9 @@ export function toSlug(str: unknown) {
   let res = str.replace(/^\s+|\s+$/g, ''); // trim
   res = res.toLowerCase();
 
-  // remove accents
-  const from = 'àáãảạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệđùúủũụưừứửữựòóỏõọôồốổỗộơờớởỡợìíỉĩịäëïîöüûñçýỳỹỵỷ';
-  const to = 'aaaaaaaaaaaaaaaaaeeeeeeeeeeeduuuuuuuuuuuoooooooooooooooooiiiiiaeiiouuncyyyyy';
+  // remove accents and convert Turkish characters to English counterparts
+  const from = 'àáãảạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệđùúủũụưừứửữựòóỏõọôồốổỗộơờớởỡợìíỉĩịäëïîöüûñçýỳỹỵỷşçğöüı';
+  const to = 'aaaaaaaaaaaaaaaaaeeeeeeeeeeeduuuuuuuuuuuoooooooooooooooooiiiiiaeiiouuncyyyyyscgoui';
   for (let i = 0, l = from.length; i < l; i++) {
     res = res.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
   }
