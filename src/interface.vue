@@ -1,160 +1,259 @@
 <template>
-  <div v-if="mode" :style="customCss">
-    <span class="prefix">{{ prefix }}</span>
-    <span class="computed-value">{{ computedValue }}</span>
-    <span class="suffix">{{ suffix }}</span>
-  </div>
-  <v-input v-else v-bind="$attrs" :field="field" :collection="collection" :primary-key="primaryKey" :model-value="value"
-    @update:model-value="$emit('input', $event)" />
-  <v-notice v-if="errorMsg" type="danger">{{ errorMsg }}</v-notice>
-  <div>
-    <!-- Button to trigger manual computation -->
-    <button class="genbutton" @click="computeAndEmitValue">Generate</button>
-  </div>
-</template>
-<style lang="css">
-.genbutton {
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: var(--v-button-width, auto);
-  min-width: var(--v-button-min-width, 140px);
-  height: var(--v-button-height, 44px);
-  padding: var(--v-button-padding, 0 19px);
-  color: var(--v-button-color, var(--foreground-inverted));
-  font-weight: var(--v-button-font-weight, 600);
-  font-size: var(--v-button-font-size, 16px);
-  line-height: var(--v-button-line-height, 22px);
-  text-decoration: none;
-  background-color: var(--v-button-background-color, var(--theme--primary));
-  border: var(--theme--border-width) solid var(--v-button-background-color, var(--theme--primary));
-  border-radius: var(--theme--border-radius);
-  cursor: pointer;
-  transition: var(--fast) var(--transition);
-  transition-property: background-color border;
-  margin-top: 10px;
-}
+	<v-input
+		v-if="isEditing && !disabled"
+		v-bind="$attrs"
+		:field="field"
+		:collection="collection"
+		:primary-key="primaryKey"
+		:model-value="computedValue"
+		:autofocus="true"
+		:placeholder="placeholder"
+		@update:model-value="onChange"
+		@blur="disableEdit"
+	>
+		<template v-if="iconLeft || renderedPrefix" #prepend>
+			<v-icon v-if="iconLeft" :name="iconLeft" />
+			<span class="prefixsuffix">{{ renderedPrefix }}</span>
+		</template>
+		<template v-if="renderedSuffix" #append>
+			<span class="prefixsuffix">{{ renderedSuffix }}</span>
+		</template>
+	</v-input>
 
-.genbutton:hover {
-  color: var(--v-button-color-hover, var(--foreground-inverted));
-  background-color: var(--v-button-background-color-hover, var(--theme--primary-accent));
-  border-color: var(--v-button-background-color-hover, var(--theme--primary-accent));
-}
-</style>
+	<div v-else class="link-preview-mode">
+		<v-icon v-if="iconLeft" :name="iconLeft" class="icon-left" />
+		<a v-if="computedValue" :href="fullLink" target="_blank" class="link">
+			{{ renderedPrefix + computedValue + renderedSuffix }}
+		</a>
+		<span v-else class="link" @click="!disabled && enableEdit">
+			{{ renderedPrefix + (computedValue ? computedValue : placeholder || '') + renderedSuffix }}
+		</span>
+
+		<div class="action-buttons">
+			<v-button v-if="!disabled" v-tooltip="t('edit')" x-small secondary icon class="action-button" @click="enableEdit">
+				<v-icon name="edit" />
+			</v-button>
+			<v-button v-tooltip="t('auto_generate')" x-small secondary icon class="genbutton" @click="computeAndEmitValue">
+				<v-icon name="auto_fix_high" />
+			</v-button>
+		</div>
+	</div>
+
+	<v-notice v-if="errorMsg" type="danger">{{ errorMsg }}</v-notice>
+</template>
 
 <script lang="ts">
-import { defineComponent, ref, inject, watch, toRefs } from 'vue';
+import { defineComponent, ref, inject, computed, toRefs, ComputedRef } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { parseExpression } from './operations';
 import { useDeepValues, useCollectionRelations } from './utils';
 import { useCollection } from '@directus/extensions-sdk';
 
 export default defineComponent({
-  props: {
-    value: {
-      type: [String, Number],
-      default: null,
-    },
-    field: {
-      type: String,
-      default: null,
-    },
-    type: {
-      type: String,
-      default: null,
-    },
-    collection: {
-      type: String,
-      default: '',
-    },
-    primaryKey: {
-      type: [String, Number],
-      default: '',
-    },
-    template: {
-      type: String,
-      default: '',
-    },
-    mode: {
-      type: String,
-      default: null,
-    },
-    prefix: {
-      type: String,
-      default: null,
-    },
-    suffix: {
-      type: String,
-      default: null,
-    },
-    customCss: {
-      type: Object,
-      default: null,
-    },
-    debugMode: {
-      type: Boolean,
-      default: false,
-    },
-    computeIfEmpty: {
-      type: Boolean,
-      default: false,
-    },
-    initialCompute: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  emits: ['input'],
-  setup(props, { emit }) {
-    const defaultValues = useCollection(props.collection).defaults;
-    const computedValue = ref<string | number | null>(props.value);
-    const relations = useCollectionRelations(props.collection);
-    const { collection, field, primaryKey } = toRefs(props);
-    const values = useDeepValues(
-      inject<ComputedRef<Record<string, any>>>('values')!,
-      relations,
-      collection,
-      field,
-      primaryKey,
-      props.template
-    );
-    const errorMsg = ref<string | null>(null);
+	props: {
+		value: {
+			type: [String, Number],
+			default: '',
+		},
+		field: {
+			type: String,
+			default: '',
+		},
+		type: {
+			type: String,
+			default: '',
+		},
+		collection: {
+			type: String,
+			default: '',
+		},
+		primaryKey: {
+			type: [String, Number],
+			default: '',
+		},
+		template: {
+			type: String,
+			default: '',
+		},
+		mode: {
+			type: String,
+			default: null,
+		},
+		prefix: {
+			type: String,
+			default: '',
+		},
+		suffix: {
+			type: String,
+			default: '',
+		},
+		customCss: {
+			type: Object,
+			default: null,
+		},
+		debugMode: {
+			type: Boolean,
+			default: false,
+		},
+		computeIfEmpty: {
+			type: Boolean,
+			default: false,
+		},
+		initialCompute: {
+			type: Boolean,
+			default: false,
+		},
+		disabled: {
+			type: Boolean,
+			default: false,
+		},
+		placeholder: {
+			type: String,
+			default: null,
+		},
+		iconLeft: {
+			type: String,
+			default: null,
+		},
+	},
+	emits: ['input'],
+	setup(props, { emit }) {
+		const { t } = useI18n();
 
-    // Function to compute the value manually when the button is clicked
-    function computeAndEmitValue() {
-      const newValue = compute();
-      if (newValue !== props.value) {
-        computedValue.value = newValue;
-        emit('input', newValue);
-      }
-    }
+		const defaultValues = useCollection(props.collection).defaults;
+		const computedValue = ref<string | number>(props.value ?? ''); // Ensure computedValue is not null
+		const relations = useCollectionRelations(props.collection);
+		const { collection, field, primaryKey } = toRefs(props);
+		const values = useDeepValues(
+			inject<ComputedRef<Record<string, any>>>('values')!,
+			relations,
+			collection,
+			field,
+			primaryKey,
+			props.template
+		);
+		const errorMsg = ref<string | null>(null);
+		const isEditing = ref(false);
 
-    function compute() {
-      try {
-        const res = props.template.replace(/{{.*?}}/g, (match) => {
-          const expression = match.slice(2, -2).trim();
-          return parseExpression(expression, values.value, defaultValues.value, props.debugMode);
-        });
+		// Computed properties for renderedPrefix and renderedSuffix
+		const renderedPrefix = computed(() => props.prefix || '');
+		const renderedSuffix = computed(() => props.suffix || '');
 
-        errorMsg.value = null;
+		// Ensure full URL with the provided prefix if computedValue is not empty
+		const fullLink = computed(() => {
+			const url = computedValue.value ? computedValue.value.toString() : '';
+			if (!url) return ''; // Return an empty string if computedValue is empty or null
 
-        if (['integer', 'decimal', 'bigInteger'].includes(props.type)) {
-          return parseInt(res) || 0;
-        }
-        if (['float'].includes(props.type)) {
-          return parseFloat(res) || 0;
-        }
-        return res;
-      } catch (err) {
-        errorMsg.value = err.message ?? 'Unknown error';
-        return null;
-      }
-    }
+			const fullUrl = props.prefix + url;
+			return fullUrl.startsWith('http://') || fullUrl.startsWith('https://') ? fullUrl : `https://${fullUrl}`;
+		});
 
-    return {
-      computedValue,
-      errorMsg,
-      computeAndEmitValue, // Return the function for button click
-    };
-  },
+		// Function to enable edit mode
+		function enableEdit() {
+			isEditing.value = true;
+		}
+
+		// Function to disable edit mode and save changes
+		function disableEdit() {
+			isEditing.value = false;
+			emit('input', computedValue.value ?? ''); // Ensure we emit an empty string if computedValue is null
+		}
+
+		// Function to compute the value manually when the button is clicked
+		function computeAndEmitValue() {
+			const newValue = compute();
+			computedValue.value = newValue ?? ''; // Set computedValue to an empty string if newValue is null
+			emit('input', computedValue.value);
+		}
+
+		function compute() {
+			try {
+				const res = props.template.replace(/{{.*?}}/g, (match) => {
+					const expression = match.slice(2, -2).trim();
+					return parseExpression(expression, values.value, defaultValues.value, props.debugMode);
+				});
+
+				errorMsg.value = null;
+
+				if (['integer', 'decimal', 'bigInteger'].includes(props.type)) {
+					return parseInt(res) || 0;
+				}
+				if (['float'].includes(props.type)) {
+					return parseFloat(res) || 0;
+				}
+				return res || ''; // Return an empty string if result is null or empty
+			} catch (err) {
+				errorMsg.value = err.message ?? 'Unknown error';
+				return '';
+			}
+		}
+
+		// Function to handle changes in v-input
+		function onChange(value) {
+			computedValue.value = value ?? ''; // Ensure computedValue is set to an empty string if null
+		}
+
+		return {
+			t,
+			computedValue,
+			errorMsg,
+			isEditing,
+			renderedPrefix,
+			renderedSuffix,
+			fullLink,
+			computeAndEmitValue,
+			enableEdit,
+			disableEdit,
+			onChange,
+		};
+	},
 });
 </script>
+
+<style lang="css" scoped>
+.link-preview-mode {
+	display: flex;
+	align-items: center;
+	min-height: var(--input-height);
+}
+
+.icon-left {
+	margin-right: 8px;
+}
+
+.prefixsuffix {
+	color: var(--foreground-subdued);
+}
+
+.link {
+	color: var(--foreground-subdued);
+	text-decoration: underline;
+	word-break: break-word;
+}
+
+.action-buttons {
+	display: flex;
+	align-items: center;
+	margin-left: 8px;
+}
+
+.action-button {
+	margin-right: 8px;
+}
+
+.genbutton {
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+	color: var(--v-button-color, var(--foreground-inverted));
+}
+
+a.link {
+	color: var(--primary);
+}
+
+a.link:focus-visible,
+a.link:hover {
+	color: var(--primary-75);
+}
+</style>
