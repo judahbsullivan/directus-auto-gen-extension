@@ -1,6 +1,6 @@
 {
   "name": "directus-auto-gen-extension",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "description": "Perform computed value based on other fields",
   "author": {
     "email": "jsullivan@hopemediagoup.com",
