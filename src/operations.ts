@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { findValueByPath, isString } from './utils';
 
 export function parseExpression(
@@ -536,7 +535,7 @@ export function parseOp(exp: string): {
 
 export function toSlug(str: unknown) {
   if (typeof str !== 'string') {
-    return null;
+    return '';
   }
 
   let res = str.replace(/^\s+|\s+$/g, ''); // trim

@@ -39,7 +39,6 @@ import { useI18n } from 'vue-i18n';
 import { parseExpression } from './operations';
 import { useDeepValues, useCollectionRelations } from './utils';
 import { useCollection } from '@directus/extensions-sdk';
-import { fetchPrefixFromCMS, savePrefixToCMS } from './utils'; // Import API functions
 
 export default defineComponent({
   props: {
@@ -63,7 +62,7 @@ export default defineComponent({
     placeholder: String,
     iconLeft: String,
   },
-  emits: ['input'],
+  emits: ['update:modelValue'],
   setup(props, { emit }) {
     const { t } = useI18n();
 
@@ -79,10 +78,10 @@ export default defineComponent({
       props.template
     );
 
-    const errorMsg = ref(null);
+    const errorMsg = ref<string | null>(null);
     const isEditing = ref(false);
 
-    const renderedPrefix = ref(props.prefix || ''); // Initialize as a reactive ref
+    const renderedPrefix = ref(props.prefix || '');
     const renderedSuffix = computed(() => props.suffix || '');
 
     const fullLink = computed(() => {
@@ -92,28 +91,10 @@ export default defineComponent({
       return fullUrl.startsWith('http://') || fullUrl.startsWith('https://') ? fullUrl : `https://${fullUrl}`;
     });
 
-    // Fetch prefix from CMS on mount
-    onMounted(async () => {
-      try {
-        const fetchedPrefix = await fetchPrefixFromCMS(props.collection, props.primaryKey);
-        renderedPrefix.value = fetchedPrefix || props.prefix || ''; // Fallback to default prefix
-      } catch (error) {
-        console.error('Failed to fetch prefix:', error);
-        renderedPrefix.value = props.prefix || ''; // Fallback to default prefix
-      }
+    // Initialize prefix on mount
+    onMounted(() => {
+      renderedPrefix.value = props.prefix || '';
     });
-
-    // Watch and save prefix changes to CMS
-    watch(
-      () => renderedPrefix.value,
-      async (newPrefix) => {
-        try {
-          await savePrefixToCMS(props.collection, props.primaryKey, newPrefix);
-        } catch (error) {
-          console.error('Failed to save prefix:', error);
-        }
-      }
-    );
 
     // Enable edit mode
     function enableEdit() {
@@ -123,14 +104,14 @@ export default defineComponent({
     // Disable edit mode and emit changes
     function disableEdit() {
       isEditing.value = false;
-      emit('input', computedValue.value || props.value);
+      emit('update:modelValue', computedValue.value || props.value);
     }
 
     // Compute value and emit
     function computeAndEmitValue() {
       const newValue = compute();
       computedValue.value = newValue;
-      emit('input', newValue || props.value);
+      emit('update:modelValue', newValue || props.value);
     }
 
     // Handle manual input changes
