@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { watch, ref, computed } from 'vue';
 import type { Ref } from 'vue';
 import { useApi, useStores } from '@directus/extensions-sdk';
@@ -9,32 +8,7 @@ export function checkFieldInTemplate(template: string, field: string) {
   return (matches || []).some((m) => m.includes(field));
 }
 
-/**
- * Fetch the prefix for a specific collection and primary key.
- */
-export async function fetchPrefixFromCMS(collection: string, primaryKey: string | number): Promise<string> {
-  const api = useApi();
-  try {
-    const response = await api.get(`/items/${collection}/${primaryKey}`);
-    return response.data?.data?.prefix || ''; // Adjust the field name based on your CMS structure
-  } catch (error) {
-    console.error('Error fetching prefix:', error);
-    return ''; // Fallback to an empty prefix if there's an error
-  }
-}
-
-/**
- * Save the prefix for a specific collection and primary key.
- */
-export async function savePrefixToCMS(collection: string, primaryKey: string | number, prefix: string): Promise<void> {
-  const api = useApi();
-  try {
-    await api.patch(`/items/${collection}/${primaryKey}`, { prefix });
-  } catch (error) {
-    console.error('Error saving prefix:', error);
-    throw error; // Rethrow the error to handle it in the calling component
-  }
-}
+// Prefix management functions removed - use local state instead
 
 function shouldUpdate(
   template: string,
