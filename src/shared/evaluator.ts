@@ -1,16 +1,32 @@
 import { findValueByPath, isString } from './utils.js';
 
-export function evaluateTemplate(template: string, context: Record<string, any>): string {
+export function evaluateTemplate(template: string, context: Record<string, any>, maxDepth: number = 3): string {
     if (!template) return '';
-    return template.replace(/\{\{(.*?)\}\}/g, (_, expression) => {
-        try {
-            const result = parseExpression(expression.trim(), context);
-            return result !== null && result !== undefined ? String(result) : '';
-        } catch (err) {
-            console.warn(`[Auto-Gen] Error evaluating: ${expression}`, err);
-            return '';
-        }
-    });
+
+    let currentTemplate = template;
+    let depth = 0;
+
+    while (currentTemplate.includes('{{') && depth < maxDepth) {
+        // Evaluate the current template
+        const evaluated = currentTemplate.replace(/\{\{(.*?)\}\}/g, (_, expression) => {
+            try {
+                const result = parseExpression(expression.trim(), context);
+                // If the result is a string that looks like a template, it will be processed in the next pass
+                return result !== null && result !== undefined ? String(result) : '';
+            } catch (err) {
+                console.warn(`[Auto-Gen] Error evaluating: ${expression}`, err);
+                return '';
+            }
+        });
+
+        // Break if no change (avoid infinite loop if {{ }} remains but cannot be resolved)
+        if (evaluated === currentTemplate) break;
+
+        currentTemplate = evaluated;
+        depth++;
+    }
+
+    return currentTemplate;
 }
 
 export function parseExpression(
