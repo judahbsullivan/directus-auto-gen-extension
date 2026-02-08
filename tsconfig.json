@@ -1,25 +1,21 @@
 {
 	"compilerOptions": {
-		"target": "ES2022",
-		"lib": ["ES2022", "DOM"],
-		"moduleResolution": "bundler",
-		"module": "ESNext",
+		"target": "ES2020",
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
 		"strict": true,
-		"noFallthroughCasesInSwitch": true,
+		"noImplicitAny": true,
 		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true,
-		"forceConsistentCasingInFileNames": true,
 		"skipLibCheck": true,
-		"isolatedModules": true,
-		"rootDir": "./src",
+		"forceConsistentCasingInFileNames": true,
 		"outDir": "./dist",
-		"declaration": true,
-		"declarationMap": true,
-		"sourceMap": true,
-		"resolveJsonModule": true,
-		"allowImportingTsExtensions": false,
-		"noEmit": false
+		"rootDir": "./src"
 	},
-	"include": ["./src/**/*.ts", "./src/**/*.vue"],
-	"exclude": ["node_modules", "dist"]
+	"include": [
+		"src/**/*"
+	],
+	"exclude": [
+		"node_modules",
+		"**/*.test.ts"
+	]
 }
