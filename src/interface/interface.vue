@@ -11,14 +11,18 @@
     </template>
   </v-input>
 
-  <div v-else class="link-preview-mode">
+  <div v-else class="readonly-preview-mode">
     <v-icon v-if="iconLeft" :name="iconLeft" class="icon-left" />
-    <a v-if="computedValue" :href="fullLink" target="_blank" class="link">
-      {{ renderedPrefix + computedValue + renderedSuffix }}
-    </a>
-    <span v-else class="link" @click="!disabled && enableEdit">
-      {{ renderedPrefix + (computedValue ? computedValue : placeholder || '') + renderedSuffix }}
-    </span>
+    <v-input
+      :model-value="renderedPrefix + (computedValue || '') + renderedSuffix"
+      disabled
+      :placeholder="placeholder || 'Auto-generated...'"
+      class="readonly-input"
+    >
+      <template v-if="iconLeft" #prepend>
+        <v-icon :name="iconLeft" />
+      </template>
+    </v-input>
 
     <div class="action-buttons">
       <v-button v-if="!disabled" v-tooltip="t('edit')" x-small secondary icon class="action-button" @click="enableEdit">
@@ -186,10 +190,11 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.link-preview-mode {
+.readonly-preview-mode {
   display: flex;
   align-items: center;
   min-height: var(--input-height);
+  gap: 8px;
 }
 
 .icon-left {
@@ -200,10 +205,8 @@ export default defineComponent({
   color: var(--foreground-subdued);
 }
 
-.link {
-  color: var(--foreground-subdued);
-  text-decoration: underline;
-  word-break: break-word;
+.readonly-input {
+  flex: 1;
 }
 
 .action-buttons {
@@ -221,12 +224,5 @@ export default defineComponent({
   align-items: center;
   cursor: pointer;
 }
-
-a.link {
-  color: var(--primary);
-}
-
-a.link:hover {
-  color: var(--primary-75);
-}
 </style>
+

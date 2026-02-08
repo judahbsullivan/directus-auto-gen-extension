@@ -204,6 +204,10 @@ function _parseExpression(
                 if (op === 'NOT') {
                     return !valueA;
                 }
+                // bitwise (unary)
+                if (op === 'BIT_NOT') {
+                    return ~(Number(valueA) | 0);
+                }
                 // string
                 if (op === 'STR_LEN') {
                     return String(valueA).length;
@@ -351,6 +355,25 @@ function _parseExpression(
                 }
                 if (op === 'POWER') {
                     return Math.pow(valueA, valueB);
+                }
+                // bitwise (binary)
+                if (op === 'BIT_AND') {
+                    return (Number(valueA) | 0) & (Number(valueB) | 0);
+                }
+                if (op === 'BIT_OR') {
+                    return (Number(valueA) | 0) | (Number(valueB) | 0);
+                }
+                if (op === 'BIT_XOR') {
+                    return (Number(valueA) | 0) ^ (Number(valueB) | 0);
+                }
+                if (op === 'BIT_LSHIFT') {
+                    return (Number(valueA) | 0) << (Number(valueB) | 0);
+                }
+                if (op === 'BIT_RSHIFT') {
+                    return (Number(valueA) | 0) >> (Number(valueB) | 0);
+                }
+                if (op === 'BIT_URSHIFT') {
+                    return (Number(valueA) | 0) >>> (Number(valueB) | 0);
                 }
                 // string
                 if (op === 'LEFT') {

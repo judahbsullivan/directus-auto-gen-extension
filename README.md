@@ -210,6 +210,20 @@ Combine `AT`, `FIRST`, `LAST`, `JSON_GET` to access nested fields in O2M or JSON
 | `AND(a, b)`       | logical AND       |
 | `OR(a, b)`        | logical OR        |
 
+### Bitwise
+
+| Operator            | Description                                              |
+| ------------------- | -------------------------------------------------------- |
+| `BIT_AND(a, b)`     | bitwise AND (`a & b`)                                    |
+| `BIT_OR(a, b)`      | bitwise OR (`a \| b`)                                    |
+| `BIT_XOR(a, b)`     | bitwise XOR (`a ^ b`)                                    |
+| `BIT_NOT(a)`        | bitwise NOT (`~a`)                                       |
+| `BIT_LSHIFT(a, b)`  | left shift (`a << b`)                                    |
+| `BIT_RSHIFT(a, b)`  | sign-propagating right shift (`a >> b`)                  |
+| `BIT_URSHIFT(a, b)` | zero-fill right shift (`a >>> b`)                        |
+
+> **Note**: Inputs are cast to 32-bit signed integers. Example: `BIT_AND(flags, 4)` checks if bit 2 is set.
+
 ### Array
 
 | Operator                   | Description                                                                                                                                                                                                   |
