@@ -108,6 +108,10 @@ function _parseExpression(
                 if (op === 'CURRENCY') {
                     return new Intl.NumberFormat().format(valueA);
                 }
+                if (op === 'PERMALINK') {
+                    const slug = toSlug(valueA);
+                    return slug.startsWith('/') ? slug : `/${slug}`;
+                }
                 // date
                 if (op === 'DATE_ISO') {
                     return new Date(valueA).toISOString();

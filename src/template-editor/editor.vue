@@ -100,6 +100,7 @@ const targetCollection = computed(() => {
 const operations = [
     // String
     { text: 'Slugify', value: 'SLUG' },
+    { text: 'Permalink (Slug + /)', value: 'PERMALINK' },
     { text: 'Uppercase', value: 'UPPER' },
     { text: 'Lowercase', value: 'LOWER' },
     { text: 'Trim', value: 'TRIM' },
@@ -177,8 +178,10 @@ function appendTemplate() {
     const newTag = `{{ ${selectedOp.value}(${selectedField.value}) }}`;
     
     // Append to existing value (one-way builder)
+    // Don't force a space - let the user add spaces in Raw mode if needed
+    // This fixes permalink construction like /{{ SLUG(title) }}
     internalValue.value = internalValue.value 
-        ? `${internalValue.value} ${newTag}` 
+        ? `${internalValue.value}${newTag}` 
         : newTag;
     
     // Emit for both legacy and modern Vue 3 patterns
