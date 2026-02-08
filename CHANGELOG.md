@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.4.2] - 2026-02-08
+
+### ✨ New Features
+- **Prefix Toggle ('/')**: Added a dedicated button to toggle a leading forward slash on the template.
+  - Automatically syncs with manual edits (if you type `/`, button activates).
+  - Ensures existing templates with `/` remain valid and editable.
+
+## [3.4.1] - 2026-02-08
+
+### 🐛 Bug Fixes
+- **Permalink Formatting**: Fixed issue where "Add to Template" forced invalid spaces. Added `PERMALINK` operation to correctly handle slug generation with leading slashes.
+- **Input Event Error**: Fixed `[object InputEvent]` error when using Visual Builder.
+
 ## [3.4.0] - 2026-02-08
 
 ### ✨ New Features

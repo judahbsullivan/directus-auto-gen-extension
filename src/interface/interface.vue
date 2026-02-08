@@ -135,8 +135,13 @@ export default defineComponent({
     }
 
     // Handle manual input changes
-    function onChange(value: string | number) {
-      computedValue.value = value || '';
+    function onChange(value: string | number | Event) {
+      if (value instanceof Event) {
+        const target = value.target as HTMLInputElement;
+        computedValue.value = target?.value || '';
+      } else {
+        computedValue.value = value || '';
+      }
     }
 
     // Compute the value using the template

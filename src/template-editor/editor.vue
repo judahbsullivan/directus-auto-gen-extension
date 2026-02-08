@@ -3,6 +3,15 @@
 		<div class="mode-switch">
 			<v-button x-small :secondary="mode !== 'visual'" @click="mode = 'visual'">Visual</v-button>
 			<v-button x-small :secondary="mode !== 'raw'" @click="mode = 'raw'">Raw</v-button>
+            <div class="spacer"></div>
+            <v-button 
+                x-small
+                :secondary="!hasSlash"
+                v-tooltip="'Toggle leading slash'"
+                @click="toggleSlash"
+            >
+                Prefix /
+            </v-button>
 		</div>
 
 		<div v-if="mode === 'visual'" class="visual-builder">
@@ -61,6 +70,38 @@ const mode = ref('visual');
 const internalValue = ref(props.value || '');
 const selectedOp = ref('SLUG');
 const selectedField = ref('');
+
+// Slash Prefix Logic
+const hasSlash = ref(false);
+
+function toggleSlash() {
+    let newValue = internalValue.value;
+    // Note: logic is inverted here because hasSlash tracks CURRENT state, 
+    // but the click happens before we update it technically? 
+    // Actually we use hasSlash.value to decide what to do.
+    
+    if (hasSlash.value) {
+        // Currently has slash -> Remove it
+        if (newValue.startsWith('/')) {
+             newValue = newValue.substring(1);
+        }
+    } else {
+        // Currently no slash -> Add it
+        if (!newValue.startsWith('/')) {
+             newValue = '/' + newValue;
+        }
+    }
+    
+    internalValue.value = newValue;
+    emit('update:modelValue', newValue);
+    emit('input', newValue);
+}
+
+// Sync hasSlash with internalValue (handles props and manual edits)
+watch(internalValue, (val) => {
+    hasSlash.value = val.startsWith('/');
+});
+
 
 // Extract collection from URL path: /admin/settings/data-model/{collection}/{field}
 function getCollectionFromUrl(): string | null {
@@ -177,8 +218,10 @@ function appendTemplate() {
     const newTag = `{{ ${selectedOp.value}(${selectedField.value}) }}`;
     
     // Append to existing value (one-way builder)
+    // Don't force a space - let the user add spaces in Raw mode if needed
+    // This fixes permalink construction like /{{ SLUG(title) }}
     internalValue.value = internalValue.value 
-        ? `${internalValue.value} ${newTag}` 
+        ? `${internalValue.value}${newTag}` 
         : newTag;
     
     // Emit for both legacy and modern Vue 3 patterns
@@ -209,6 +252,9 @@ watch(() => props.value, (newVal) => {
     display: flex;
     gap: 5px;
     margin-bottom: 5px;
+}
+.spacer {
+    flex: 1;
 }
 .grid {
     display: grid;

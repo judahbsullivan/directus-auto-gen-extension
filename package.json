@@ -1,6 +1,6 @@
 {
   "name": "directus-auto-gen-extension",
-  "version": "3.4.0",
+  "version": "3.4.2",
   "type": "module",
   "description": "Perform computed value based on other fields",
   "author": {
