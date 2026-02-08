@@ -12,5 +12,5 @@ module.exports = {
     'node_modules/(?!(@directus|vue)/)'
   ],
   extensionsToTreatAsEsm: ['.ts'],
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js']
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.cjs']
 };

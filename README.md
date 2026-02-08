@@ -35,6 +35,16 @@ then move the file into the extensions or download it in the marketplace!
    7. **Compute If Empty**: Compute the value if the field is empty. This is useful if you want a value to be computed once such as the created date or a unique ID.
    8. **Initial Compute**: Compute the value when opening the form. This is useful if you want to compute a value based on the current date or other dynamic values.
 
+# Server-Side Support (New in v3.2.0)
+
+As of version 3.2.0, this extension includes a **Server-Side Hook** that ensures your data remains consistent regardless of how it's updated.
+
+### How it works
+1.  **Isomorphic Logic**: Uses the exact same evaluation engine as the frontend Interface.
+2.  **API & Hooks**: Listens for `items.create` and `items.update` events. If you create an item via API, the computed value is automatically assigned.
+3.  **Context Merging**: For partial updates (e.g. `PATCH /items/1 { quantity: 5 }`), the hook automatically fetches the existing document (e.g. `price`) to correctly calculate the total.
+4.  **Performance**: Uses intelligent Schema Caching to minimize database overhead during high-volume operations.
+
 # Syntax
 
 The template consists of 2 elements: **plain strings** & **expressions**.

@@ -36,8 +36,8 @@
 <script lang="ts">
 import { defineComponent, ref, watch, inject, computed, toRefs, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { parseExpression } from './operations';
-import { useDeepValues, useCollectionRelations } from './utils';
+import { parseExpression } from '../operations.js';
+import { useDeepValues, useCollectionRelations } from '../utils.js';
 import { useCollection } from '@directus/extensions-sdk';
 
 export default defineComponent({
@@ -46,11 +46,26 @@ export default defineComponent({
       type: [String, Number],
       default: '',
     },
-    field: String,
-    type: String,
-    collection: String,
-    primaryKey: [String, Number],
-    template: String,
+    field: {
+      type: String,
+      default: '',
+    },
+    type: {
+      type: String,
+      default: 'string',
+    },
+    collection: {
+      type: String,
+      required: true,
+    },
+    primaryKey: {
+      type: [String, Number],
+      default: '+',
+    },
+    template: {
+      type: String,
+      default: '',
+    },
     mode: String,
     prefix: String,
     suffix: String,
@@ -66,16 +81,17 @@ export default defineComponent({
   setup(props, { emit }) {
     const { t } = useI18n();
 
-    const defaultValues = useCollection(props.collection).defaults;
+    const collectionName = props.collection || '';
+    const defaultValues = useCollection(collectionName).defaults;
     const computedValue = ref(props.value || '');
-    const relations = useCollectionRelations(props.collection);
+    const relations = useCollectionRelations(collectionName);
     const values = useDeepValues(
       inject('values')!,
       relations,
-      toRefs(props.collection),
-      toRefs(props.field),
-      toRefs(props.primaryKey),
-      props.template
+      toRefs(props).collection as any, // Cast to any to avoid strict Ref type mismatch
+      toRefs(props).field as any,
+      toRefs(props).primaryKey as any,
+      props.template || ''
     );
 
     const errorMsg = ref<string | null>(null);
@@ -115,12 +131,13 @@ export default defineComponent({
     }
 
     // Handle manual input changes
-    function onChange(value) {
+    function onChange(value: string | number) {
       computedValue.value = value || '';
     }
 
     // Compute the value using the template
     function compute() {
+      if (!props.template) return '';
       try {
         const result = props.template.replace(/{{.*?}}/g, (match) => {
           const expression = match.slice(2, -2).trim();
@@ -128,11 +145,11 @@ export default defineComponent({
         });
 
         errorMsg.value = null;
-        if (['integer', 'decimal', 'bigInteger'].includes(props.type)) return parseInt(result) || 0;
+        if (['integer', 'decimal', 'bigInteger'].includes(props.type || '')) return parseInt(result) || 0;
         if (props.type === 'float') return parseFloat(result) || 0;
         return result || '';
-      } catch (err) {
-        errorMsg.value = err.message || 'Error computing value';
+      } catch (err: unknown) {
+        errorMsg.value = (err instanceof Error ? err.message : String(err)) || 'Error computing value';
         return '';
       }
     }
@@ -213,4 +230,3 @@ a.link:hover {
   color: var(--primary-75);
 }
 </style>
-

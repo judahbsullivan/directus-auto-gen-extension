@@ -1,7 +1,19 @@
 import { watch, ref, computed } from 'vue';
 import type { Ref } from 'vue';
 import { useApi, useStores } from '@directus/extensions-sdk';
-import { Relation } from '@directus/shared/types';
+
+// Relation type from Directus - simplified for our needs
+interface Relation {
+  collection: string;
+  related_collection: string | null;
+  meta?: {
+    one_field?: string;
+    many_field?: string;
+  };
+}
+
+// Re-export pure utilities from shared module for backward compatibility
+export { findValueByPath, isString } from './shared/utils.js';
 
 export function checkFieldInTemplate(template: string, field: string) {
   const matches = template.match(/{{.*?}}/g);
@@ -220,20 +232,3 @@ export const useDeepValues = (
 
   return finalValues;
 };
-
-export const findValueByPath = (obj: Record<string, any>, path: string) => {
-  let value = obj;
-  for (const i of path.split('.')) {
-    if (i in value) {
-      value = value[i];
-    } else {
-      return { value: null, found: false };
-    }
-  }
-  return { value, found: true };
-};
-
-export function isString(value: unknown): value is string {
-  return typeof value === 'string' || value instanceof String;
-}
-
