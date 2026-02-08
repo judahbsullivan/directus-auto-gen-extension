@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.3.0] - 2026-02-08
+
+### 🎨 UI Improvements
+- **Edit Mode Display**: Replaced misleading hyperlink with a standard read-only `<v-input>` component for better UX (Issue #6)
+- **Real-time Updates**: Field value updates dynamically as dependent fields change
+
+### ✨ New Features
+- **Bitwise Operations** (Issue #7): Added comprehensive bitwise operator support:
+  - `BIT_AND(a, b)` - Bitwise AND
+  - `BIT_OR(a, b)` - Bitwise OR
+  - `BIT_XOR(a, b)` - Bitwise XOR
+  - `BIT_NOT(a)` - Bitwise NOT
+  - `BIT_LSHIFT(a, b)` - Left shift
+  - `BIT_RSHIFT(a, b)` - Sign-propagating right shift
+  - `BIT_URSHIFT(a, b)` - Zero-fill right shift
+
+### 🔒 Technical
+- Bitwise inputs are cast to 32-bit signed integers for consistent behavior
+- Vue 3 `:model-value` binding for Directus 10+ compatibility
+
 ## [3.2.0] - 2026-02-08
 
 ### 🔥 Major Features
