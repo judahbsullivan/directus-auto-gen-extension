@@ -6,7 +6,8 @@ module.exports = {
     '^.+\\.vue$': '@vue/vue3-jest'
   },
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1'
+    '^@/(.*)$': '<rootDir>/src/$1',
+    '^(\\.{1,2}/.*)\\.js$': '$1'
   },
   transformIgnorePatterns: [
     'node_modules/(?!(@directus|vue)/)'
