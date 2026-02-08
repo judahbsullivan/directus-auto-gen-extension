@@ -1,6 +1,6 @@
 {
   "name": "directus-auto-gen-extension",
-  "version": "3.2.0",
+  "version": "3.4.0",
   "type": "module",
   "description": "Perform computed value based on other fields",
   "author": {
@@ -34,6 +34,11 @@
         "type": "hook",
         "name": "auto-gen-hook",
         "source": "src/hook/index.ts"
+      },
+      {
+        "type": "interface",
+        "name": "auto-gen-template-editor",
+        "source": "src/template-editor/index.ts"
       }
     ],
     "host": "^10.10.0"
