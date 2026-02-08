@@ -1,5 +1,6 @@
 <img alt="NPM Version" src="https://img.shields.io/npm/v/directus-auto-gen-extension?style=flat-square&color=%236644FF">
 
+
 # Introduction
 
 A [Directus](https://github.com/directus/directus) extension for automatically calculating the value of a field based on other fields of the same item, on the client side.
@@ -12,7 +13,7 @@ A [Directus](https://github.com/directus/directus) extension for automatically c
 - **Lightweight**. No third-party libraries.
 - CMS Theme Supporting, out of the box is adjusted to match the theme of the current CMS settings but can be overrided with customcss option.
 
-![Screenshot 2024-10-11 153657](https://files.slack.com/files-pri/T04FFTELK6W-F080UM10JHJ/image.png)
+<img width="1713" height="1060" alt="Screenshot 2026-02-08 at 2 45 54 AM" src="https://github.com/user-attachments/assets/1e9ad3cc-0e3b-4e39-aca6-a22d065a8087" />
 
 # Installation
 
