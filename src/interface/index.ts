@@ -16,7 +16,7 @@ export default defineInterface({
             type: 'string',
             meta: {
                 width: 'full',
-                interface: 'input',
+                interface: 'auto-gen-template-editor',
             },
         },
         {

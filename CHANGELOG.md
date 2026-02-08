@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.4.0] - 2026-02-08
+
+### ✨ New Features
+- **Visual Template Builder**: New interface for building template strings with a query-builder UI
+  - Visual/Raw mode toggle for flexibility
+  - Operations dropdown with 30+ functions including all bitwise operators
+  - Field dropdown auto-populated from target collection
+  - "Add to Template" button for one-click template construction
+
+### 🔧 Technical Improvements
+- **URL-based Context Detection**: Collection extracted from URL path for accurate field fetching
+- **Docker Optimization**: Added `.dockerignore` reducing build time from 450s to <1s
+
 ## [3.3.0] - 2026-02-08
 
 ### 🎨 UI Improvements
