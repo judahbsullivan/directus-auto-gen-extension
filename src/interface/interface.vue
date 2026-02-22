@@ -1,5 +1,5 @@
 <template>
-  <v-input v-if="isEditing && !disabled" v-bind="$attrs" :field="field" :collection="collection"
+  <v-input v-if="isEditing && !disabled" v-bind="inputAttrs" :field="field" :collection="collection"
     :primary-key="primaryKey" :model-value="computedValue" :autofocus="true" :placeholder="placeholder"
     @update:model-value="onChange" @blur="disableEdit">
     <template v-if="iconLeft || renderedPrefix" #prepend>
@@ -45,6 +45,7 @@ import { useDeepValues, useCollectionRelations } from '../utils.js';
 import { useCollection } from '@directus/extensions-sdk';
 
 export default defineComponent({
+  inheritAttrs: false,
   props: {
     value: {
       type: [String, Number],
@@ -81,8 +82,8 @@ export default defineComponent({
     placeholder: String,
     iconLeft: String,
   },
-  emits: ['update:modelValue'],
-  setup(props, { emit }) {
+  emits: ['update:modelValue', 'input'],
+  setup(props, { emit, attrs }) {
     const { t } = useI18n();
 
     const collectionName = props.collection || '';
@@ -100,6 +101,14 @@ export default defineComponent({
 
     const errorMsg = ref<string | null>(null);
     const isEditing = ref(false);
+    const inputAttrs = computed(() => {
+      const filtered: Record<string, unknown> = { ...attrs };
+      delete filtered.modelValue;
+      delete filtered.value;
+      delete filtered.onInput;
+      delete filtered['onUpdate:modelValue'];
+      return filtered;
+    });
 
     const renderedPrefix = ref(props.prefix || '');
     const renderedSuffix = computed(() => props.suffix || '');
@@ -121,26 +130,53 @@ export default defineComponent({
       isEditing.value = true;
     }
 
+    function emitValue(value: string | number) {
+      const normalized = String(value);
+      emit('update:modelValue', normalized);
+      emit('input', normalized);
+    }
+
     // Disable edit mode and emit changes
     function disableEdit() {
       isEditing.value = false;
-      emit('update:modelValue', computedValue.value || props.value);
+      emitValue(computedValue.value);
     }
 
     // Compute value and emit
     function computeAndEmitValue() {
       const newValue = compute();
       computedValue.value = newValue;
-      emit('update:modelValue', newValue || props.value);
+      emitValue(newValue);
     }
 
-    // Handle manual input changes
-    function onChange(value: string | number | Event) {
-      if (value instanceof Event) {
-        const target = value.target as HTMLInputElement;
-        computedValue.value = target?.value || '';
-      } else {
-        computedValue.value = value || '';
+    // Handle manual input changes from Directus v-input and native events.
+    function onChange(value: unknown) {
+      if (typeof value === 'string' || typeof value === 'number') {
+        computedValue.value = String(value);
+        emitValue(computedValue.value);
+        return;
+      }
+
+      if (value && typeof value === 'object') {
+        const eventLike = value as {
+          target?: { value?: unknown };
+          currentTarget?: { value?: unknown };
+          srcElement?: { value?: unknown };
+          value?: unknown;
+        };
+
+        const fromTarget = eventLike.target?.value;
+        const fromCurrentTarget = eventLike.currentTarget?.value;
+        const fromSrcElement = eventLike.srcElement?.value;
+        const directValue = eventLike.value;
+
+        const resolved =
+          fromTarget ?? fromCurrentTarget ?? fromSrcElement ?? directValue;
+
+        if (typeof resolved === 'string' || typeof resolved === 'number') {
+          computedValue.value = String(resolved);
+          emitValue(computedValue.value);
+        }
       }
     }
 
@@ -167,7 +203,11 @@ export default defineComponent({
     watch(
       () => props.value,
       (newValue) => {
-        computedValue.value = newValue;
+        if (typeof newValue === 'string' || typeof newValue === 'number') {
+          computedValue.value = String(newValue);
+          return;
+        }
+        computedValue.value = '';
       }
     );
 
@@ -189,6 +229,7 @@ export default defineComponent({
       disableEdit,
       computeAndEmitValue,
       onChange,
+      inputAttrs,
     };
   },
 });
