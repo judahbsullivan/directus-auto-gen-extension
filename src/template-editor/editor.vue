@@ -230,10 +230,33 @@ function appendTemplate() {
 }
 
 // Handle manual input in Raw mode
-function onInputChange(val: string) {
-    internalValue.value = val;
-    emit('update:modelValue', val);
-    emit('input', val);
+function onInputChange(val: unknown) {
+    let newValue = internalValue.value;
+
+    if (typeof val === 'string' || typeof val === 'number') {
+        newValue = String(val);
+    } else if (val && typeof val === 'object') {
+        const eventLike = val as {
+            target?: { value?: unknown };
+            currentTarget?: { value?: unknown };
+            srcElement?: { value?: unknown };
+            value?: unknown;
+        };
+
+        const resolved =
+            eventLike.target?.value ??
+            eventLike.currentTarget?.value ??
+            eventLike.srcElement?.value ??
+            eventLike.value;
+
+        if (typeof resolved === 'string' || typeof resolved === 'number') {
+            newValue = String(resolved);
+        }
+    }
+
+    internalValue.value = newValue;
+    emit('update:modelValue', newValue);
+    emit('input', newValue);
 }
 
 // Sync with parent
