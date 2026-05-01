@@ -38,10 +38,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, inject, computed, toRefs, onMounted } from 'vue';
+import { defineComponent, ref, watch, inject, computed, toRefs, onMounted, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { parseExpression } from '../operations.js';
 import { useDeepValues, useCollectionRelations } from '../utils.js';
+import { isTemplateReadyForCompute } from './compute-readiness.js';
 import { useCollection } from '@directus/extensions-sdk';
 
 export default defineComponent({
@@ -88,7 +89,7 @@ export default defineComponent({
 
     const collectionName = props.collection || '';
     const defaultValues = useCollection(collectionName).defaults;
-    const computedValue = ref(props.value || '');
+    const computedValue = ref<string | number>(props.value || '');
     const relations = useCollectionRelations(collectionName);
     const values = useDeepValues(
       inject('values')!,
@@ -101,6 +102,9 @@ export default defineComponent({
 
     const errorMsg = ref<string | null>(null);
     const isEditing = ref(false);
+    const isMounted = ref(false);
+    const hasInitialComputed = ref(false);
+    const hasSeenReadyValues = ref(false);
     const inputAttrs = computed(() => {
       const filtered: Record<string, unknown> = { ...attrs };
       delete filtered.modelValue;
@@ -136,6 +140,20 @@ export default defineComponent({
       emit('input', normalized);
     }
 
+    function normalizeValue(value: unknown) {
+      if (value === null || value === undefined) return '';
+      return String(value);
+    }
+
+    function applyComputedValue(value: string | number, forceEmit = false) {
+      const normalized = normalizeValue(value);
+      computedValue.value = normalized;
+
+      if (forceEmit || normalizeValue(props.value) !== normalized) {
+        emitValue(normalized);
+      }
+    }
+
     // Disable edit mode and emit changes
     function disableEdit() {
       isEditing.value = false;
@@ -145,8 +163,7 @@ export default defineComponent({
     // Compute value and emit
     function computeAndEmitValue() {
       const newValue = compute();
-      computedValue.value = newValue;
-      emitValue(newValue);
+      applyComputedValue(newValue, true);
     }
 
     // Handle manual input changes from Directus v-input and native events.
@@ -199,6 +216,51 @@ export default defineComponent({
       }
     }
 
+    function canComputeFromCurrentValues() {
+      return isTemplateReadyForCompute({
+        template: props.template || '',
+        values: values.value || {},
+        defaultValues: defaultValues.value || {},
+        computedField: props.field || '',
+        relations: relations.value || [],
+        collection: props.collection || '',
+      });
+    }
+
+    async function runAutoCompute() {
+      if (!isMounted.value || !props.template) return;
+
+      await nextTick();
+
+      if (!canComputeFromCurrentValues()) {
+        return;
+      }
+
+      if (props.initialCompute && !hasInitialComputed.value) {
+        const newValue = compute();
+        if (errorMsg.value) return;
+
+        hasInitialComputed.value = true;
+        hasSeenReadyValues.value = true;
+        applyComputedValue(newValue);
+        return;
+      }
+
+      if (!hasSeenReadyValues.value) {
+        hasSeenReadyValues.value = true;
+        return;
+      }
+
+      if (props.computeIfEmpty && normalizeValue(computedValue.value)) {
+        return;
+      }
+
+      const newValue = compute();
+      if (errorMsg.value) return;
+
+      applyComputedValue(newValue);
+    }
+
     // Watch for prop changes to update computedValue
     watch(
       () => props.value,
@@ -215,7 +277,21 @@ export default defineComponent({
     onMounted(() => {
       computedValue.value = props.value || '';
       isEditing.value = !!props.value; // Enable edit mode if value exists
+      isMounted.value = true;
+      void runAutoCompute();
     });
+
+    watch(
+      values,
+      () => {
+        void runAutoCompute();
+      },
+      {
+        deep: true,
+        flush: 'post',
+        immediate: true,
+      }
+    );
 
     return {
       t,
@@ -271,4 +347,3 @@ export default defineComponent({
   cursor: pointer;
 }
 </style>
-
