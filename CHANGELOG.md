@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.4.5] - 2026-05-01
+
+### Fixed
+- Fixed `Initial Compute` so Auto Gen computes once when an existing item edit form opens.
+- Waits for Directus form values to hydrate before computing, including relation arrays like `ProductTypes`.
+- Prevents relation formulas from emitting partial values before hydration.
+- Preserves manual recalculation, dependency recalculation, `computeIfEmpty`, display modes, prefix/suffix, and debug behavior.
+
 ## [3.4.2] - 2026-02-08
 
 ### ✨ New Features
