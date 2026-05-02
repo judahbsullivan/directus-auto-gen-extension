@@ -283,3 +283,6 @@ There are 2 dynamic variables available that you can use in the expressions:
 
 - `$NOW`: return the current Date object. Example: `{{ YEAR($NOW) }}` returns the current year.
 - `$CURRENT_USER`: return the current user's id. Example: `{{ EQUAL($CURRENT_USER, user) }}` checks if the `user` field is the current user.
+
+
+<!-- GitAds-Verify: D5CLUY9OEMKP3YRZ1MHY5COOBJU3TXZ2 -->
