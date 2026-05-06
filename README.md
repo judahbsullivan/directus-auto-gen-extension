@@ -128,8 +128,6 @@ Inspect raw grouped output with `JSON_STRINGIFY`:
 
 Users who work with the Directus AI Assistant can use the maintained prompt in [docs/prompts/directus-ai-formula-assistant.md](docs/prompts/directus-ai-formula-assistant.md) to generate Auto Gen formulas faster. Add it to your Directus MCP prompts collection or AI Assistant workflow, then review and test generated formulas before relying on them in production.
 
-Maintainers validating PRs can use the Codex live validation prompt in [docs/prompts/codex-live-validation.md](docs/prompts/codex-live-validation.md) to capture safe Directus evidence for formula changes.
-
 ## Available operators
 
 ### Type conversion
