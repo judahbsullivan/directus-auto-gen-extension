@@ -1,0 +1,135 @@
+[02:43:33.869] INFO: Extensions loaded
+[02:43:33.875] INFO: Initializing bootstrap...
+[02:43:33.877] INFO: Database already initialized, skipping install
+[02:43:33.877] INFO: Running migrations...
+[02:43:33.882] INFO: Done
+2026-05-06T02:43:34: PM2 log: Launching in no daemon mode
+2026-05-06T02:43:34: PM2 log: App [directus:0] starting in -cluster mode-
+[02:43:37.151] INFO: Extensions loaded
+[02:43:37.164] WARN: Spatialite isn't installed. Geometry type support will be limited.
+[02:43:37.171] INFO: Watching extensions for changes...
+[02:43:37.201] INFO: GraphQL Subscriptions started at 0.0.0.0:8055/graphql
+[02:43:37.202] INFO: WebSocket Server started at 0.0.0.0:8055/websocket
+[02:43:37.202] INFO: Logs WebSocket Server started at ws://0.0.0.0:8055/websocket/logs
+[02:43:37.214] INFO: Server started at http://0.0.0.0:8055
+2026-05-06T02:43:37: PM2 log: App [directus:0] online
+[03:30:07] GET /server/info 200 40ms
+2026-05-06T03:30:07: PM2 log: Stopping app:directus id:0
+[03:30:07.745] INFO: Shutting down...
+[03:30:07.749] INFO: Database connections destroyed
+[03:30:07.750] INFO: Directus shut down OK. Bye bye!
+2026-05-06T03:30:07: PM2 log: App name:directus id:0 disconnected
+2026-05-06T03:30:07: PM2 log: App [directus:0] exited with code [0] via signal [SIGINT]
+2026-05-06T03:30:07: PM2 log: pid=36 msg=process killed
+2026-05-06T03:30:07: PM2 log: PM2 successfully stopped
+[03:30:11.227] INFO: Extensions loaded
+[03:30:11.230] INFO: Loaded extensions: directus-auto-gen-extension
+[03:30:11.233] INFO: Initializing bootstrap...
+[03:30:11.235] INFO: Database already initialized, skipping install
+[03:30:11.235] INFO: Running migrations...
+[03:30:11.240] INFO: Done
+2026-05-06T03:30:11: PM2 log: Launching in no daemon mode
+2026-05-06T03:30:11: PM2 log: App [directus:0] starting in -cluster mode-
+[03:30:14.319] INFO: Extensions loaded
+[03:30:14.322] INFO: Loaded extensions: directus-auto-gen-extension
+[03:30:14.330] WARN: Spatialite isn't installed. Geometry type support will be limited.
+[03:30:14.336] INFO: Watching extensions for changes...
+[03:30:14.364] INFO: GraphQL Subscriptions started at 0.0.0.0:8055/graphql
+[03:30:14.365] INFO: WebSocket Server started at 0.0.0.0:8055/websocket
+[03:30:14.365] INFO: Logs WebSocket Server started at ws://0.0.0.0:8055/websocket/logs
+[03:30:14.377] INFO: Server started at http://0.0.0.0:8055
+2026-05-06T03:30:14: PM2 log: App [directus:0] online
+2026-05-06T03:31:37: PM2 log: Stopping app:directus id:0
+[03:31:37.945] INFO: Shutting down...
+[03:31:37.949] INFO: Database connections destroyed
+[03:31:37.949] INFO: Directus shut down OK. Bye bye!
+2026-05-06T03:31:37: PM2 log: App name:directus id:0 disconnected
+2026-05-06T03:31:37: PM2 log: App [directus:0] exited with code [0] via signal [SIGINT]
+2026-05-06T03:31:38: PM2 log: pid=37 msg=process killed
+2026-05-06T03:31:38: PM2 log: PM2 successfully stopped
+[03:31:41.076] INFO: Extensions loaded
+[03:31:41.080] INFO: Loaded extensions: directus-auto-gen-extension
+[03:31:41.084] INFO: Initializing bootstrap...
+[03:31:41.086] INFO: Database already initialized, skipping install
+[03:31:41.086] INFO: Running migrations...
+[03:31:41.091] INFO: Done
+2026-05-06T03:31:41: PM2 log: Launching in no daemon mode
+2026-05-06T03:31:41: PM2 log: App [directus:0] starting in -cluster mode-
+[03:31:44.126] INFO: Extensions loaded
+[03:31:44.129] INFO: Loaded extensions: directus-auto-gen-extension
+[03:31:44.137] WARN: Spatialite isn't installed. Geometry type support will be limited.
+[03:31:44.144] INFO: Watching extensions for changes...
+[03:31:44.174] INFO: GraphQL Subscriptions started at 0.0.0.0:8055/graphql
+[03:31:44.175] INFO: WebSocket Server started at 0.0.0.0:8055/websocket
+[03:31:44.175] INFO: Logs WebSocket Server started at ws://0.0.0.0:8055/websocket/logs
+[03:31:44.187] INFO: Server started at http://0.0.0.0:8055
+2026-05-06T03:31:44: PM2 log: App [directus:0] online
+[03:31:54] GET /server/ping 200 4ms
+[03:32:29] GET /admin/content/pr21_frequency_parents/1 200 6ms
+[03:32:30] GET /extensions/sources/index.js 200 21ms
+[03:32:30] POST /auth/refresh 400 44ms
+[03:32:30] GET /auth?sessionOnly 304 6ms
+[03:32:30] GET /server/info 200 27ms
+[03:32:59] POST /auth/login 200 518ms
+[03:32:59] GET /auth?sessionOnly 304 25ms
+[03:32:59] GET /server/info 200 60ms
+[03:32:59] GET /roles/me?fields[]=id 304 37ms
+[03:32:59] GET /users/me?fields[]=*&fields[]=role.id 200 47ms
+[03:32:59] GET /policies/me/globals 304 46ms
+[03:32:59] GET /permissions/me 200 5ms
+[03:32:59] GET /fields 200 84ms
+[03:32:59] GET /presets?filter[user][_eq]=94b7a0a3-d61d-4f5a-b3f6-1cb02c2da853&limit=-1 304 66ms
+[03:32:59] GET /presets?filter[role][_eq]=4c96a3e0-ebab-4390-b78b-7e611801398d&filter[user][_null]=true&limit=-1 304 72ms
+[03:32:59] GET /presets?filter[role][_null]=true&filter[user][_null]=true&limit=-1 304 74ms
+[03:32:59] GET /settings 304 75ms
+[03:32:59] GET /collections 200 85ms
+[03:32:59] GET /dashboards?fields[]=*&sort[]=name&limit=-1 304 29ms
+[03:32:59] GET /panels?fields[]=*&sort[]=dashboard&limit=-1 304 26ms
+[03:32:59] GET /flows?fields[]=*&fields[]=operations.*&limit=-1 304 24ms
+[03:32:59] GET /relations 200 111ms
+[03:32:59] GET /notifications?filter[_and][0][recipient][_eq]=94b7a0a3-d61d-4f5a-b3f6-1cb02c2da853&filter[_and][1][status][_eq]=inbox&aggregate[count]=id 304 35ms
+[03:32:59] GET /translations?fields[]=language&fields[]=key&fields[]=value&filter[language][_eq]=en-US&limit=-1 304 4ms
+[03:32:59] GET /users/me?fields[]=email&fields[]=first_name&fields[]=last_name&fields[]=last_page 200 43ms
+[03:32:59] GET /versions?filter[_and][0][collection][_eq]=pr21_frequency_parents&filter[_and][1][item][_eq]=1&sort=-date_created&fields[]=* 200 43ms
+[03:32:59] GET /items/pr21_frequency_parents/1?fields[]=title 200 45ms
+[03:32:59] GET /items/pr21_frequency_parents/1 200 59ms
+[03:32:59] GET /revisions?filter[_and][0][collection][_eq]=pr21_frequency_parents&filter[_and][1][item][_eq]=1&filter[_and][2][version][_null]=true&aggregate[count]=id 200 41ms
+[03:32:59] GET /shares?filter[_and][0][collection][_eq]=pr21_frequency_parents&filter[_and][1][item][_eq]=1&aggregate[count]=id 200 42ms
+[03:32:59] GET /comments?filter[_and][0][collection][_eq]=pr21_frequency_parents&filter[_and][1][item][_eq]=1&aggregate[count]=id 200 47ms
+[03:32:59] GET /items/pr21_frequency_items?filter[_and][0][_or][0][parent][_neq]=1&filter[_and][0][_or][1][parent][_null]=true&aggregate[countDistinct]=id 200 37ms
+[03:32:59] GET /items/pr21_frequency_items?aggregate[count]=id&filter[_and][0][parent]=1 200 38ms
+[03:32:59] GET /items/pr21_frequency_items?fields[]=Value&fields[]=id&filter[_and][0][parent]=1&page=1&limit=15 200 40ms
+[03:32:59] GET /items/pr21_frequency_items?limit=25&fields[]=Value&fields[]=parent&fields[]=id&sort[]=id&page=1&filter[_and][0][_or][0][parent][_neq]=1&filter[_and][0][_or][1][parent][_null]=true 200 34ms
+[03:32:59] GET /items/pr21_frequency_items?aggregate[countDistinct]=id&filter[_and][0][_or][0][parent][_neq]=1&filter[_and][0][_or][1][parent][_null]=true 200 36ms
+[03:32:59] GET /items/pr21_frequency_parents/1?fields[]=items 200 37ms
+[03:32:59] GET /items/pr21_frequency_items?filter[id][_in]=1,2,3,4,5,6,7,8,9,10 200 8ms
+[03:33:00] PATCH /users/me/track/page 204 14ms
+[03:33:31] GET /admin/settings/data-model/pr21_frequency_parents/result 200 2ms
+[03:33:32] GET /extensions/sources/index.js 200 12ms
+[03:33:32] POST /auth/refresh 200 22ms
+[03:33:32] GET /auth?sessionOnly 304 11ms
+[03:33:32] GET /server/info 304 15ms
+[03:33:32] GET /policies/me/globals 304 18ms
+[03:33:32] GET /roles/me?fields[]=id 304 19ms
+[03:33:32] GET /users/me?fields[]=*&fields[]=role.id 200 25ms
+[03:33:32] GET /permissions/me 304 5ms
+[03:33:32] GET /fields 304 27ms
+[03:33:32] GET /presets?filter[user][_eq]=94b7a0a3-d61d-4f5a-b3f6-1cb02c2da853&limit=-1 304 23ms
+[03:33:32] GET /presets?filter[role][_eq]=4c96a3e0-ebab-4390-b78b-7e611801398d&filter[user][_null]=true&limit=-1 304 29ms
+[03:33:32] GET /dashboards?fields[]=*&sort[]=name&limit=-1 304 31ms
+[03:33:32] GET /collections 304 38ms
+[03:33:32] GET /flows?fields[]=*&fields[]=operations.*&limit=-1 304 34ms
+[03:33:32] GET /presets?filter[role][_null]=true&filter[user][_null]=true&limit=-1 304 34ms
+[03:33:32] GET /notifications?filter[_and][0][recipient][_eq]=94b7a0a3-d61d-4f5a-b3f6-1cb02c2da853&filter[_and][1][status][_eq]=inbox&aggregate[count]=id 304 31ms
+[03:33:32] GET /settings 304 27ms
+[03:33:32] GET /relations 304 29ms
+[03:33:32] GET /panels?fields[]=*&sort[]=dashboard&limit=-1 304 25ms
+[03:33:32] GET /translations?fields[]=language&fields[]=key&fields[]=value&filter[language][_eq]=en-US&limit=-1 304 6ms
+[03:33:32] GET /fields 304 27ms
+[03:33:32] GET /collections/pr21_frequency_parents 200 28ms
+[03:33:32] GET /fields/pr21_frequency_parents/result 200 15ms
+[03:33:32] GET /fields 304 31ms
+[03:33:32] PATCH /users/me/track/page 204 15ms
+[03:35:25] GET /admin/assets/jsonlint-BN6n430W.js 200 11ms
+[03:35:25] GET /translations?fields[]=key&groupBy[]=key&limit=-1 200 10ms
+[03:35:25] GET /translations?fields[]=key&groupBy[]=key&limit=-1 304 5ms
