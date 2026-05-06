@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Added
+- Added an official Directus AI Assistant prompt guide for generating Auto Gen formulas, based on a community contribution by Vladimir-Va.
+
 ## [3.4.5] - 2026-05-01
 
 ### Fixed

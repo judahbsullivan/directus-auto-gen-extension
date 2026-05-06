@@ -106,6 +106,10 @@ Combine `AT`, `FIRST`, `LAST`, `JSON_GET` to access nested fields in O2M or JSON
 
 **Note**: For M2O, O2M, M2M fields, you can only access the fields of the direct relation. For example, if you have a `user` field that is a M2O relation to the `users` collection, you can only access the fields of the `users` collection. You cannot access the fields of the `roles` collection even though the `users` collection has a M2O relation to the `roles` collection. On the other hand, JSON fields have no such limitation!
 
+## AI-assisted formula creation
+
+Users who work with the Directus AI Assistant can use the maintained prompt in [docs/prompts/directus-ai-formula-assistant.md](docs/prompts/directus-ai-formula-assistant.md) to generate Auto Gen formulas faster. Add it to your Directus MCP prompts collection or AI Assistant workflow, then review and test generated formulas before relying on them in production.
+
 ## Available operators
 
 ### Type conversion
