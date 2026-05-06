@@ -104,6 +104,24 @@ Combine `AT`, `FIRST`, `LAST`, `JSON_GET` to access nested fields in O2M or JSON
 {{ JSON_GET(LAST(products), "price") }}
 ```
 
+Summarize repeated O2M values with `PLUCK`, `COUNT_VALUES`, and `FORMAT_COUNTS`:
+
+```
+{{ FORMAT_COUNTS(COUNT_VALUES(PLUCK(items, "Value")), "{count}x{value}", ", ") }}
+```
+
+If the O2M item field is available directly in each item context, the same summary can also be written with `MAP`:
+
+```
+{{ FORMAT_COUNTS(COUNT_VALUES(MAP(items, Value)), "{count}x{value}", ", ") }}
+```
+
+Inspect raw grouped output with `JSON_STRINGIFY`:
+
+```
+{{ JSON_STRINGIFY(COUNT_VALUES(PLUCK(items, "Value"))) }}
+```
+
 **Note**: For M2O, O2M, M2M fields, you can only access the fields of the direct relation. For example, if you have a `user` field that is a M2O relation to the `users` collection, you can only access the fields of the `users` collection. You cannot access the fields of the `roles` collection even though the `users` collection has a M2O relation to the `roles` collection. On the other hand, JSON fields have no such limitation!
 
 ## AI-assisted formula creation
@@ -246,6 +264,10 @@ Users who work with the Directus AI Assistant can use the maintained prompt in [
 | `MAP(a, expression)`       | apply `expression` to each element of `a` and return a new array, each element of `a` must be an object. Example: `MAP(products, MULTIPLY(price, quantity))` returns an array of total price of each product. |
 | `FILTER(a, expression)`    | filter `a` with `expression` and return a new array, each element of `a` must be an object. Example: `FILTER(products, GT(stock, 0))` returns an array of products that are in stock.                         |
 | `SORT(a, expression)`      | sort `a` with `expression` and return a new array, each element of `a` must be an object. Example: `SORT(products, price)` returns an array of products sorted by price.                                      |
+| `UNIQUE(a)`                | return unique primitive values from array `a` while preserving first-seen order.                                                                                                                               |
+| `COUNT_VALUES(a)`          | count primitive values in array `a` and return an ordered array of `{ value, count }` objects.                                                                                                                 |
+| `PLUCK(a, fieldPath)`      | extract `fieldPath` from each object in array `a`, returning `null` for missing values.                                                                                                                        |
+| `FORMAT_COUNTS(a, t, s)`   | format count objects with template `t`, replacing `{count}` and `{value}`, then join with separator `s`.                                                                                                       |
 
 ### JSON
 

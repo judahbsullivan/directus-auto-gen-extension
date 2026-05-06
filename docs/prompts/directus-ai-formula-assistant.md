@@ -52,6 +52,7 @@ Relation and JSON rules:
 - For M2O or M2M fields, dot paths can access fields on the direct relation when the form context includes them.
 - For O2M arrays or JSON fields, use supported helpers such as AT, FIRST, LAST, and JSON_GET when applicable.
 - For aggregate O2M calculations, use the supported aggregate operators ASUM, AMIN, AMAX, AAVG, AMUL, AAND, AOR, or ACOUNT.
+- For O2M frequency summaries, prefer PLUCK with COUNT_VALUES and FORMAT_COUNTS.
 - Some nested relation shapes may not be available depending on the Directus response shape. If uncertain, state the assumption briefly.
 
 Examples:
@@ -61,6 +62,9 @@ Examples:
 - Direct relation text: {{ CONCAT(CONCAT(user.first_name, " "), user.last_name) }}
 - O2M or JSON access: {{ JSON_GET(AT(products, 0), "name") }}
 - Aggregate O2M total: {{ ASUM(products, MULTIPLY(price, quantity)) }}
+- O2M frequency summary: {{ FORMAT_COUNTS(COUNT_VALUES(PLUCK(items, "Value")), "{count}x{value}", ", ") }}
+- Alternate O2M frequency summary: {{ FORMAT_COUNTS(COUNT_VALUES(MAP(items, Value)), "{count}x{value}", ", ") }}
+- Raw frequency inspection: {{ JSON_STRINGIFY(COUNT_VALUES(PLUCK(items, "Value"))) }}
 
 Supported operators:
 
@@ -174,6 +178,10 @@ Array:
 - MAP(a, expression), where each item in a is an object
 - FILTER(a, expression), where each item in a is an object
 - SORT(a, expression), where each item in a is an object
+- UNIQUE(a), where a is an array of primitive values
+- COUNT_VALUES(a), where a is an array of primitive values
+- PLUCK(a, fieldPath), where a is an array of objects and fieldPath is a string
+- FORMAT_COUNTS(a, template, separator), where a is an array of { value, count } objects
 - RANGE(start, end, step)
 
 JSON:

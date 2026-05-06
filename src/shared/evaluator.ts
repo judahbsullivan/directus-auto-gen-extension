@@ -231,6 +231,36 @@ function _parseExpression(
                     }
                     return 0;
                 }
+                if (op === 'UNIQUE') {
+                    if (valueA instanceof Array) {
+                        const seen = new Set<string>();
+                        return valueA.filter((item) => {
+                            if (!isFormulaPrimitive(item)) return false;
+                            const key = primitiveKey(item);
+                            if (seen.has(key)) return false;
+                            seen.add(key);
+                            return true;
+                        });
+                    }
+                    return [];
+                }
+                if (op === 'COUNT_VALUES') {
+                    if (valueA instanceof Array) {
+                        const counts = new Map<string, { value: FormulaPrimitive; count: number }>();
+                        for (const item of valueA) {
+                            if (!isFormulaPrimitive(item)) continue;
+                            const key = primitiveKey(item);
+                            const existing = counts.get(key);
+                            if (existing) {
+                                existing.count += 1;
+                            } else {
+                                counts.set(key, { value: item, count: 1 });
+                            }
+                        }
+                        return Array.from(counts.values());
+                    }
+                    return [];
+                }
                 // array and string
                 if (op === 'LENGTH') {
                     if (valueA instanceof Array || isString(valueA)) {
@@ -431,6 +461,18 @@ function _parseExpression(
                     }
                     return String(valueA) + String(valueB);
                 }
+                if (op === 'PLUCK') {
+                    if (valueA instanceof Array && isString(valueB)) {
+                        return valueA.map((item) => {
+                            if (item === null || typeof item !== 'object' || Array.isArray(item)) {
+                                return null;
+                            }
+                            const result = findValueByPath(item as Record<string, any>, valueB);
+                            return result.found && result.value !== undefined ? result.value : null;
+                        });
+                    }
+                    return [];
+                }
                 if (op === 'AT') {
                     if (valueA instanceof Array || isString(valueA)) {
                         return valueA[Number(valueB)];
@@ -523,6 +565,19 @@ function _parseExpression(
                     }
                     return null;
                 }
+                if (op === 'FORMAT_COUNTS') {
+                    if (!(valueA instanceof Array)) {
+                        return '';
+                    }
+                    const formatted = valueA
+                        .filter(isCountRow)
+                        .map((row) =>
+                            String(valueB)
+                                .replace(/\{count\}/g, String(row.count))
+                                .replace(/\{value\}/g, String(row.value))
+                        );
+                    return formatted.length ? formatted.join(String(valueC)) : '';
+                }
             } else if (args.length % 2 === 0) {
                 if (op === 'IFS') {
                     for (let i = 0; i < args.length; i += 2) {
@@ -584,6 +639,28 @@ export function parseOp(exp: string): {
         return { op, args };
     }
     return null;
+}
+
+type FormulaPrimitive = string | number | boolean | null;
+
+function isFormulaPrimitive(value: unknown): value is FormulaPrimitive {
+    return value === null || ['string', 'number', 'boolean'].includes(typeof value);
+}
+
+function primitiveKey(value: FormulaPrimitive): string {
+    if (value === null) return 'null:null';
+    return `${typeof value}:${String(value)}`;
+}
+
+function isCountRow(value: unknown): value is { value: unknown; count: number } {
+    return (
+        value !== null &&
+        typeof value === 'object' &&
+        !Array.isArray(value) &&
+        Object.prototype.hasOwnProperty.call(value, 'value') &&
+        typeof (value as { count?: unknown }).count === 'number' &&
+        Number.isFinite((value as { count: number }).count)
+    );
 }
 
 export const toSlug = (value: unknown): string => {
