@@ -509,6 +509,93 @@ describe('Test parseExpression', () => {
       expect(parseExpression('SORT(arr, MULTIPLY(a, -1))', { arr })).toEqual([arr[2], arr[0], arr[1]]);
       expect(parseExpression('SORT(arr, b)', { arr })).toEqual([arr[1], arr[0], arr[2]]);
     });
+
+    test('UNIQUE op', () => {
+      const values = ['A', 'A', 'B', 'C', 'B'];
+      expect(parseExpression('UNIQUE(values)', { values })).toEqual(['A', 'B', 'C']);
+      expect(values).toEqual(['A', 'A', 'B', 'C', 'B']);
+      expect(parseExpression('UNIQUE(values)', { values: ['B', 'A', 'B', 'C', 'A'] })).toEqual(['B', 'A', 'C']);
+      expect(parseExpression('UNIQUE(values)', { values: 1 })).toEqual([]);
+      expect(parseExpression('UNIQUE(values)', {
+        values: [1, '1', true, 'true', null, 'null', 1, true, null],
+      })).toEqual([1, '1', true, 'true', null, 'null']);
+    });
+
+    test('COUNT_VALUES op', () => {
+      const values = ['A', 'A', 'B', 'C', 'B'];
+      expect(parseExpression('COUNT_VALUES(values)', { values })).toEqual([
+        { value: 'A', count: 2 },
+        { value: 'B', count: 2 },
+        { value: 'C', count: 1 },
+      ]);
+      expect(values).toEqual(['A', 'A', 'B', 'C', 'B']);
+      expect(parseExpression('COUNT_VALUES(values)', { values: ['B', 'A', 'B', 'C', 'A'] })).toEqual([
+        { value: 'B', count: 2 },
+        { value: 'A', count: 2 },
+        { value: 'C', count: 1 },
+      ]);
+      expect(parseExpression('COUNT_VALUES(values)', { values: 1 })).toEqual([]);
+      expect(parseExpression('COUNT_VALUES(values)', {
+        values: [1, '1', true, 'true', null, 'null', 1, true, null],
+      })).toEqual([
+        { value: 1, count: 2 },
+        { value: '1', count: 1 },
+        { value: true, count: 2 },
+        { value: 'true', count: 1 },
+        { value: null, count: 2 },
+        { value: 'null', count: 1 },
+      ]);
+    });
+
+    test('PLUCK op', () => {
+      expect(parseExpression('PLUCK(items, "Value")', {
+        items: [{ Value: 'A' }, { Value: 'A' }, { Value: 'B' }],
+      })).toEqual(['A', 'A', 'B']);
+      expect(parseExpression('PLUCK(items, "nested.value")', {
+        items: [{ nested: { value: 'A' } }, { nested: { value: 'B' } }],
+      })).toEqual(['A', 'B']);
+      expect(parseExpression('PLUCK(items, "Value")', {
+        items: [{ Value: 'A' }, {}, null, 'B', { Value: null }, { Value: undefined }],
+      })).toEqual(['A', null, null, null, null, null]);
+      expect(parseExpression('PLUCK(items, "Value")', { items: 1 })).toEqual([]);
+    });
+
+    test('FORMAT_COUNTS op', () => {
+      const items = [
+        { Value: 'A' },
+        { Value: 'A' },
+        { Value: 'A' },
+        { Value: 'A' },
+        { Value: 'B' },
+        { Value: 'B' },
+        { Value: 'B' },
+        { Value: 'C' },
+        { Value: 'D' },
+        { Value: 'D' },
+      ];
+      expect(parseExpression('FORMAT_COUNTS(COUNT_VALUES(PLUCK(items, "Value")), "{count}x{value}", ", ")', { items })).toBe('4xA, 3xB, 1xC, 2xD');
+      expect(parseExpression('FORMAT_COUNTS(COUNT_VALUES(MAP(items, Value)), "{count}x{value}", ", ")', { items })).toBe('4xA, 3xB, 1xC, 2xD');
+      expect(parseExpression('FORMAT_COUNTS(counts, "{count}x{value}", ", ")', {
+        counts: [
+          { value: 'A', count: 2 },
+          { value: 'B' },
+          { count: 1 },
+          { value: 'C', count: '1' },
+          null,
+          { value: 'D', count: 1 },
+        ],
+      })).toBe('2xA, 1xD');
+      expect(parseExpression('FORMAT_COUNTS(counts, "{count}x{value}", ", ")', {
+        counts: [{ value: 'A' }, { count: 1 }, null],
+      })).toBe('');
+      expect(parseExpression('FORMAT_COUNTS(counts, "{count}x{value}", ", ")', { counts: 1 })).toBe('');
+    });
+
+    test('JSON_STRINGIFY can inspect COUNT_VALUES results', () => {
+      expect(parseExpression('JSON_STRINGIFY(COUNT_VALUES(PLUCK(items, "Value")))', {
+        items: [{ Value: 'A' }, { Value: 'A' }, { Value: 'B' }],
+      })).toBe('[{"value":"A","count":2},{"value":"B","count":1}]');
+    });
   });
 
   describe('JSON ops', () => {
