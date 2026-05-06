@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+## [3.5.0] - 2026-05-06
+
 ### Added
 - Added an official Directus AI Assistant prompt guide for generating Auto Gen formulas, based on a community contribution by Vladimir-Va.
 - Added `UNIQUE`, `COUNT_VALUES`, `PLUCK`, and `FORMAT_COUNTS` formula operators for O2M frequency summaries, based on Issue #20 from Vladimir-Va.
