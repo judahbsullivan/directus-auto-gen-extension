@@ -76,12 +76,26 @@ describe('Test parseExpression', () => {
       expect(parseExpression('YEAR($NOW)', {})).toBe(new Date().getFullYear());
     });
 
+    test('YEAR op supports Directus date-only strings', () => {
+      expect(parseExpression('YEAR(date_of_birth)', { date_of_birth: '2000-01-01' })).toBe(2000);
+    });
+
     test('MONTH op', () => {
       expect(parseExpression('MONTH($NOW)', {})).toBe(new Date().getMonth());
     });
 
     test('GET_DATE op', () => {
       expect(parseExpression('GET_DATE($NOW)', {})).toBe(new Date().getDate());
+    });
+
+    test('date ops support date-like strings without DATE wrapper', () => {
+      expect(parseExpression('MONTH(date_of_birth)', { date_of_birth: '2000-02-03' })).toBe(1);
+      expect(parseExpression('GET_DATE(date_of_birth)', { date_of_birth: '2000-02-03' })).toBe(3);
+    });
+
+    test('date ops preserve invalid date fallback', () => {
+      expect(parseExpression('YEAR(date_of_birth)', { date_of_birth: 'not-a-date' })).toBe(0);
+      expect(parseExpression('YEAR(date_of_birth)', { date_of_birth: null })).toBe(0);
     });
 
     test('DAY op', () => {

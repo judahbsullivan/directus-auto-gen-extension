@@ -132,7 +132,8 @@ function _parseExpression(
                     return `${hours}:${minutes}:${seconds}`;
                 }
                 if (['YEAR', 'MONTH', 'GET_DATE', 'DAY', 'HOURS', 'MINUTES', 'SECONDS', 'TIME'].includes(op)) {
-                    if (valueA instanceof Date) {
+                    const date = coerceDate(valueA);
+                    if (date) {
                         const op2func: Record<string, keyof Date> = {
                             YEAR: 'getFullYear',
                             MONTH: 'getMonth',
@@ -144,7 +145,7 @@ function _parseExpression(
                             TIME: 'getTime',
                         };
                         // @ts-ignore
-                        return valueA[op2func[op]]();
+                        return date[op2func[op]]();
                     }
                     return 0;
                 }
@@ -661,6 +662,27 @@ function isCountRow(value: unknown): value is { value: unknown; count: number } 
         typeof (value as { count?: unknown }).count === 'number' &&
         Number.isFinite((value as { count: number }).count)
     );
+}
+
+function coerceDate(value: unknown): Date | null {
+    if (value instanceof Date) {
+        return Number.isNaN(value.getTime()) ? null : value;
+    }
+    if (typeof value === 'string') {
+        const dateOnly = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (dateOnly) {
+            const [, year, month, day] = dateOnly;
+            const date = new Date(Number(year), Number(month) - 1, Number(day));
+            return Number.isNaN(date.getTime()) ? null : date;
+        }
+        const date = new Date(value);
+        return Number.isNaN(date.getTime()) ? null : date;
+    }
+    if (typeof value === 'number') {
+        const date = new Date(value);
+        return Number.isNaN(date.getTime()) ? null : date;
+    }
+    return null;
 }
 
 export const toSlug = (value: unknown): string => {
